@@ -1,0 +1,177 @@
+[
+    {
+        "id": "budget-family-box",
+        "name": "Budget Family Box",
+        "price": 349,
+        "weight": "400g (100g x 4)",
+        "images": [
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/budget-family-box.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/normal-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-dates.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/figs.webp"
+        ],
+        "shortBenefit": "Affordable everyday healthy snacking",
+        "includedItems": [
+            "Black Kismis (100g)",
+            "Normal Kismis (100g)",
+            "Black Dates (100g)",
+            "Athi Palam / Figs (100g)"
+        ],
+        "healthBenefits": [
+            "Iron-rich combination",
+            "Improves digestion",
+            "Supports blood circulation",
+            "Natural sweetness without added sugar",
+            "Great for kids and elders"
+        ]
+    },
+    {
+        "id": "family-health-box",
+        "name": "Family Health Box",
+        "price": 399,
+        "weight": "400g (100g x 4)",
+        "images": [
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/family-healthy-box.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/cashew.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/badam.jpeg",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/normal-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-dates.webp"
+        ],
+        "shortBenefit": "Complete daily nutrition for the whole family",
+        "includedItems": [
+            "Cashew (100g)",
+            "Badam / Almonds (100g)",
+            "Normal Kismis / Raisins (100g)",
+            "Black Dates (100g)"
+        ],
+        "healthBenefits": [
+            "Boosts immunity naturally",
+            "Improves heart health",
+            "Provides sustained energy",
+            "Rich in antioxidants and fiber",
+            "Supports healthy digestion"
+        ]
+    },
+    {
+        "id": "grand-7-item-box-50g",
+        "name": "Grand 7 Item Nutri Box (Mini)",
+        "price": 399,
+        "weight": "350g (50g x 7)",
+        "images": [
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/grand-7.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/cashew.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/badam.jpeg",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/walnut.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/normal-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-dates.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/figs.webp"
+        ],
+        "shortBenefit": "Compact premium nutrition pack",
+        "includedItems": [
+            "Cashew (50g)",
+            "Badam / Almonds (50g)",
+            "Walnut (50g)",
+            "Black Kismis (50g)",
+            "Normal Kismis (50g)",
+            "Black Dates (50g)",
+            "Athi Palam / Figs (50g)"
+        ],
+        "healthBenefits": [
+            "Balanced daily nutrition",
+            "Supports immunity",
+            "Energy boosting mix",
+            "Perfect trial size pack",
+            "Healthy gifting option"
+        ]
+    },
+    {
+        "id": "classic-nut-box",
+        "name": "Classic Nut Box",
+        "price": 519,
+        "weight": "400g (100g x 4)",
+        "images": [
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/classic-nut-box.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/cashew.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/badam.jpeg",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/walnut.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-kismis.webp"
+        ],
+        "shortBenefit": "Premium nut selection for daily strength",
+        "includedItems": [
+            "Cashew (100g)",
+            "Badam / Almonds (100g)",
+            "Walnut (100g)",
+            "Black Kismis (100g)"
+        ],
+        "healthBenefits": [
+            "Omega-3 & healthy fat rich",
+            "Supports heart health",
+            "Improves skin and hair",
+            "Boosts stamina",
+            "Perfect as a healthy gift option"
+        ]
+    },
+    {
+        "id": "premium-energy-box",
+        "name": "Premium Energy Box",
+        "price": 549,
+        "weight": "400g (100g x 4)",
+        "images": [
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/premium-energy-box.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/cashew.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/walnut.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/badam.jpeg",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/figs.webp"
+        ],
+        "shortBenefit": "Brain & body power packed nutrition",
+        "includedItems": [
+            "Cashew (100g)",
+            "Walnut (100g)",
+            "Badam / Almonds (100g)",
+            "Athi Palam / Figs (100g)"
+        ],
+        "healthBenefits": [
+            "Supports brain function (Omega-3 rich)",
+            "Improves bone strength",
+            "High in protein and healthy fats",
+            "Enhances memory and focus",
+            "Natural energy booster"
+        ]
+    },
+    {
+        "id": "grand-7-item-box-100g",
+        "name": "Grand 7 Item Nutri Box",
+        "price": 749,
+        "weight": "700g (100g x 7)",
+        "images": [
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/grand-7.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/cashew.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/badam.jpeg",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/walnut.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/normal-kismis.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/black-dates.webp",
+            "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/figs.webp"
+        ],
+        "shortBenefit": "Premium all-in-one family nutrition box",
+        "includedItems": [
+            "Cashew (100g)",
+            "Badam / Almonds (100g)",
+            "Walnut (100g)",
+            "Black Kismis (100g)",
+            "Normal Kismis (100g)",
+            "Black Dates (100g)",
+            "Athi Palam / Figs (100g)"
+        ],
+        "healthBenefits": [
+            "Complete daily nutrition",
+            "Rich in Omega-3 & healthy fats",
+            "Boosts immunity",
+            "Improves digestion",
+            "Supports heart & brain health",
+            "Natural energy source"
+        ]
+    }
+]

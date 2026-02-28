@@ -1,65 +1,124 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import productsData from "@/data/products.json";
+import ProductCard from "@/components/ProductCard";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import BannerCarousel from "@/components/BannerCarousel";
+
+const BEST_SELLERS_IDS = ['classic-nut-box', 'premium-energy-box', 'grand-7-item-box-100g'];
+
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const filterParam = searchParams.get('filter');
+
+  const [filter, setFilter] = useState<'all' | 'best-sellers'>('all');
+
+  useEffect(() => {
+    if (filterParam === 'best-sellers') {
+      setFilter('best-sellers');
+      // Smooth scroll to products section
+      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (filterParam === 'all') {
+      setFilter('all');
+      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [filterParam]);
+
+  const displayedProducts = filter === 'best-sellers'
+    ? productsData.filter(p => BEST_SELLERS_IDS.includes(p.id))
+    : productsData;
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-brand-green-dark border-b border-brand-gold/10">
+        <BannerCarousel />
+
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-green-dark/90 via-transparent to-black/30 opacity-80" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-40 flex justify-center lg:justify-start text-center lg:text-left mt-20 lg:mt-32">
+          <div className="max-w-xl bg-black/40 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl">
+            <span className="text-brand-gold font-bold tracking-wider text-sm uppercase mb-4 block drop-shadow-md">Premium Quality Dry Fruits</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight drop-shadow-xl flex flex-col gap-2">
+              <span>Healthy Choices,</span>
+              <span className="text-brand-gold">Mummy's Care.</span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto lg:mx-0 drop-shadow-md leading-relaxed">
+              Discover our carefully curated combinations of premium nuts, dates, and seeds for your family's daily wellness.
+            </p>
+            <button
+              onClick={() => setFilter('all')}
+              className="inline-flex items-center justify-center px-8 py-4 text-brand-green-dark bg-brand-gold hover:bg-brand-gold-light rounded-xl font-bold transition-transform duration-300 hover:-translate-y-1 shadow-xl shadow-brand-gold/20 mr-4"
+            >
+              Explore Our Combos
+            </button>
+            <button
+              onClick={() => {
+                setFilter('best-sellers');
+                document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="inline-flex mt-4 sm:mt-0 items-center justify-center px-8 py-4 text-white border border-white/20 hover:bg-white/10 rounded-xl font-bold transition-all duration-300 hover:-translate-y-1 shadow-xl backdrop-blur-sm"
+            >
+              View Best Sellers
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <main className="flex-grow bg-white dark:bg-black py-16 scroll-mt-20" id="products">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                {filter === 'best-sellers' ? 'Our Best Sellers' : 'Our Signature Combos'}
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400">Handpicked premium selections for your health needs</p>
+            </div>
+
+            {/* Filter Toggle */}
+            <div className="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl">
+              <button
+                onClick={() => setFilter('all')}
+                className={`px-6 py-2 rounded-lg font-semibold text-sm transition-all ${filter === 'all' ? 'bg-white dark:bg-brand-gold text-brand-green shadow-md dark:shadow-brand-gold/20' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+              >
+                All Combos
+              </button>
+              <button
+                onClick={() => setFilter('best-sellers')}
+                className={`px-6 py-2 rounded-lg font-semibold text-sm transition-all ${filter === 'best-sellers' ? 'bg-white dark:bg-brand-gold text-brand-green shadow-md dark:shadow-brand-gold/20' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+              >
+                Best Sellers
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {displayedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Suspense fallback={<div className="min-h-screen bg-brand-green-dark"></div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
