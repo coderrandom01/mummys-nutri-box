@@ -72,7 +72,7 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                             src={item.product.images[0]}
                                             alt={item.product.name}
                                             fill
-                                            unoptimized
+                                            sizes="80px"
                                             className="object-contain"
                                         />
                                     ) : (

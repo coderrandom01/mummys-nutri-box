@@ -36,8 +36,8 @@ export default function BannerCarousel() {
                             alt={`Banner Image ${idx + 1}`}
                             fill
                             priority={idx === 0}
+                            sizes="100vw"
                             className="object-cover object-center"
-                            unoptimized
                         />
                     </div>
                 ))}
@@ -50,8 +50,8 @@ export default function BannerCarousel() {
                     alt="Mobile Banner"
                     fill
                     priority
+                    sizes="100vw"
                     className="object-cover object-center"
-                    unoptimized
                 />
             </div>
 

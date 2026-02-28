@@ -12,7 +12,7 @@ export default function Footer() {
                     <div className="col-span-1 md:col-span-2">
                         <Link href="/" className="flex items-center space-x-2 mb-4">
                             <div className="w-10 h-10 overflow-hidden rounded-full flex items-center justify-center shadow-lg border border-brand-gold/20 bg-white">
-                                <Image src="https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/mummys-nutri-box-logo.webp" alt="Mummy's Nutri Basket Logo" width={40} height={40} unoptimized className="object-cover w-full h-full" />
+                                <Image src="https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/mummys-nutri-box-logo.webp" alt="Mummy's Nutri Basket Logo" width={40} height={40} className="object-cover w-full h-full" />
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xl font-bold leading-none tracking-tight text-brand-gold">Mummy's Nutri Basket</span>

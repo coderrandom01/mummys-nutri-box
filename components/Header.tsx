@@ -23,7 +23,7 @@ export default function Header() {
                         <div className="flex items-center gap-2">
                             <Link href="/" className="group flex items-center space-x-3">
                                 <div className="w-14 h-14 md:w-20 md:h-20 overflow-hidden rounded-full flex items-center justify-center shadow-lg border border-brand-gold/20 bg-white group-hover:border-brand-gold transition-colors duration-300 flex-shrink-0">
-                                    <Image src="https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/mummys-nutri-box-logo.webp" alt="Mummy's Nutri Basket Logo" width={80} height={80} unoptimized className="object-cover w-full h-full" />
+                                    <Image src="https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/mummys-nutri-box-logo.webp" alt="Mummy's Nutri Basket Logo" width={80} height={80} className="object-cover w-full h-full" />
                                 </div>
                                 <div className="flex flex-col justify-center">
                                     <span className="text-xl md:text-2xl font-black leading-none tracking-tight text-brand-green dark:text-brand-gold">Mummy's Nutri Basket</span>

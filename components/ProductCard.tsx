@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, ArrowRight, ShieldCheck, Leaf } from "lucide-react";
+import { ShoppingCart, ArrowRight, ShieldCheck, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Product } from "@/store/cartStore";
 import { useCartStore } from "@/store/cartStore";
 
@@ -13,27 +17,99 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
     const addToCart = useCartStore((state) => state.addToCart);
 
+    // Custom arrow components for Slick
+    const CustomPrevArrow = (props: any) => {
+        const { className, style, onClick } = props;
+        return (
+            <button
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-black/80 hover:bg-brand-gold text-brand-green hover:text-white rounded-full p-1 z-40 opacity-100 md:opacity-0 group-hover/carousel:opacity-100 transition-all shadow-md active:scale-95 flex items-center justify-center"
+                style={{ ...style }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(); }}
+            >
+                <ChevronLeft className="w-5 h-5 pointer-events-none" />
+            </button>
+        );
+    };
+
+    const CustomNextArrow = (props: any) => {
+        const { className, style, onClick } = props;
+        return (
+            <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-black/80 hover:bg-brand-gold text-brand-green hover:text-white rounded-full p-1 z-40 opacity-100 md:opacity-0 group-hover/carousel:opacity-100 transition-all shadow-md active:scale-95 flex items-center justify-center"
+                style={{ ...style }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClick(); }}
+            >
+                <ChevronRight className="w-5 h-5 pointer-events-none" />
+            </button>
+        );
+    };
+
+    const sliderSettings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: product.images && product.images.length > 1,
+        prevArrow: <CustomPrevArrow />,
+        nextArrow: <CustomNextArrow />,
+        swipeToSlide: true,
+        appendDots: (dots: any) => (
+            <div style={{ bottom: "10px" }}>
+                <ul className="m-0 p-0 flex justify-center gap-1.5">{dots}</ul>
+            </div>
+        ),
+        customPaging: (i: number) => (
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-green/30 dark:bg-white/30 transition-all duration-300 .slick-active:w-3 .slick-active:bg-brand-gold hover:bg-brand-gold" />
+        )
+    };
+
     return (
         <div className="group flex flex-col bg-white dark:bg-brand-green-dark/40 rounded-2xl overflow-hidden border border-brand-gold/10 hover:border-brand-gold/30 hover-lift shadow-sm dark:shadow-none">
 
             {/* Image Area */}
-            <div className="relative aspect-square w-full bg-brand-green/2 dark:bg-brand-green-dark p-6 overflow-hidden flex items-center justify-center">
+            <div className="relative aspect-square w-full bg-brand-green/2 dark:bg-brand-green-dark overflow-hidden group/carousel">
                 {product.images && product.images.length > 0 ? (
-                    <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        unoptimized
-                        className="object-contain p-4 group-hover:scale-110 transition-transform duration-500 drop-shadow-xl z-20"
-                    />
+                    <div className="w-full h-full relative z-20">
+                        {product.images.length > 1 ? (
+                            <Slider {...sliderSettings} className="h-full w-full [&_.slick-track]:flex [&_.slick-track]:items-center [&_.slick-slide]:h-full [&_.slick-slide>div]:h-full [&_.slick-list]:h-full">
+                                {product.images.map((img, idx) => (
+                                    <div key={idx} className="relative w-full aspect-square flex items-center justify-center outline-none">
+                                        <div className="relative w-full h-full p-6">
+                                            <Image
+                                                src={img}
+                                                alt={`${product.name} ${idx + 1}`}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className="object-contain p-4 group-hover/carousel:scale-110 transition-transform duration-500 will-change-transform"
+                                                priority={idx === 0}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </Slider>
+                        ) : (
+                            <div className="relative w-full aspect-square p-6">
+                                <Image
+                                    src={product.images[0]}
+                                    alt={product.name}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    className="object-contain p-4 group-hover/carousel:scale-110 transition-transform duration-500 will-change-transform"
+                                />
+                            </div>
+                        )}
+                    </div>
                 ) : (
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-brand-gold/20 to-brand-green/20 flex items-center justify-center shadow-inner relative z-10 group-hover:scale-110 transition-transform duration-500">
-                        <Leaf className="w-12 h-12 text-brand-green dark:text-brand-gold opacity-50" />
+                    <div className="w-full h-full p-6 flex items-center justify-center">
+                        <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-brand-gold/20 to-brand-green/20 flex items-center justify-center shadow-inner relative z-10 group-hover/carousel:scale-110 transition-transform duration-500">
+                            <Leaf className="w-12 h-12 text-brand-green dark:text-brand-gold opacity-50" />
+                        </div>
                     </div>
                 )}
 
                 {/* Decorative background element */}
-                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-brand-gold/10 rounded-full blur-2xl group-hover:bg-brand-gold/20 transition-colors duration-500" />
+                <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-brand-gold/10 rounded-full blur-2xl group-hover:bg-brand-gold/20 transition-colors duration-500 pointer-events-none" />
             </div>
 
             {/* Content Area */}
