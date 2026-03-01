@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, Instagram } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useState } from "react";
 import Cart from "./Cart";
@@ -15,6 +15,12 @@ export default function Header() {
 
     return (
         <>
+            {/* Promotional Banner */}
+            <div className="bg-brand-gold text-brand-green-dark text-xs sm:text-sm font-bold text-center py-2 px-4 shadow-sm z-50 relative">
+                <span className="inline-block">
+                    ✨ Get FREE Chia Seeds (50g) with our ₹759 Combo! | Flat ₹50 OFF on orders above ₹1000 | Flat ₹100 OFF on orders above ₹2000 ✨
+                </span>
+            </div>
             <header className="sticky top-0 z-40 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-brand-gold/10 bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-brand-green-dark/95">
                 <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
                     <div className="flex items-center justify-between py-4 md:py-6">
@@ -42,7 +48,16 @@ export default function Header() {
                         </nav>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 md:gap-4">
+
+                            <a
+                                href="https://www.instagram.com/mummysnutribasket?igsh=OGhoZXU3eDcxMG1k&utm_source=qr"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 text-brand-green hover:text-brand-gold dark:text-gray-300 transition-colors"
+                            >
+                                <Instagram className="w-5 h-5 md:w-6 md:h-6" />
+                            </a>
 
                             <button
                                 className="relative p-2 text-brand-green hover:text-brand-gold dark:text-gray-300 transition-colors"

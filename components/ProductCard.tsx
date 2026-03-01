@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { Product } from "@/store/cartStore";
 import { useCartStore } from "@/store/cartStore";
 import { calculateScalablePrice } from "@/lib/pricing";
+import { toast } from "react-hot-toast";
 
 interface ProductCardProps {
     product: Product;
@@ -182,7 +183,10 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {/* Actions */}
                 <div className="flex items-center gap-3">
                     <button
-                        onClick={() => addToCart(product, isScalable ? selectedWeight : undefined, isScalable ? currentPrice : undefined)}
+                        onClick={() => {
+                            addToCart(product, isScalable ? selectedWeight : undefined, isScalable ? currentPrice : undefined);
+                            toast.success(`${product.name} added to cart!`);
+                        }}
                         className="flex-1 bg-brand-green hover:bg-brand-green-light dark:bg-brand-gold dark:hover:bg-brand-gold-light text-white dark:text-brand-green-dark py-3 px-4 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm shadow-md shadow-brand-green/20 dark:shadow-brand-gold/10"
                     >
                         <ShoppingCart className="w-4 h-4" />

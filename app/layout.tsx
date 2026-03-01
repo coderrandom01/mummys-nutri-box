@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Mummy's Nutri Basket",
   description: "Premium dry fruits & seeds for healthy family nutrition.",
+  icons: {
+    icon: "https://4ne9fphotqlkpkiu.public.blob.vercel-storage.com/mummys-nutri-box-logo.webp",
+  },
   openGraph: {
     title: "Mummy's Nutri Basket",
     description: "Healthy Choices, Mummy's Care.",
@@ -43,6 +47,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Toaster position="bottom-right" toastOptions={{ className: 'dark:bg-gray-800 dark:text-white border border-brand-gold/20' }} />
       </body>
     </html>
   );

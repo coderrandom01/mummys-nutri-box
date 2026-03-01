@@ -18,7 +18,16 @@ export default function Cart({ isOpen, onClose }: CartProps) {
         const expectsDelivery = items.some(item => item.product.isScalable);
         const deliveryFee = expectsDelivery ? 50 : 0;
         const subtotal = getCartTotal();
-        const grandTotal = subtotal + deliveryFee;
+
+        // Discount Logic
+        let discount = 0;
+        if (subtotal >= 2000) discount = 100;
+        else if (subtotal >= 1000) discount = 50;
+
+        // Free Item Logic
+        const hasFreeChiaSeeds = items.some(item => item.product.id === "grand-7-item-box-100g");
+
+        const grandTotal = subtotal + deliveryFee - discount;
 
         const phoneNumber = "918883670422"; // User provided WhatsApp number
         const intro = "Hello! I would like to place an order from Mummy's Nutri Basket:%0A%0A";
@@ -27,10 +36,17 @@ export default function Cart({ isOpen, onClose }: CartProps) {
             `*${item.product.name}* (${item.selectedWeight ? `${item.selectedWeight}g` : item.product.weight})%0AQuantity: ${item.quantity}%0APrice: ₹${(item.calculatedPrice ?? item.product.price) * item.quantity}`
         ).join("%0A%0A");
 
+        let addons = "";
+        if (hasFreeChiaSeeds) {
+            addons += "%0A%0A🎁 *Free Item:* Chia Seeds (50g)";
+        }
+
+        const discountLine = discount > 0 ? `%0A- Discount: ₹${discount}` : "";
         const deliveryLine = expectsDelivery ? `%0A%0A+ Delivery Fee: ₹50` : "";
         const total = `%0A%0A*Grand Total: ₹${grandTotal}*`;
 
-        const message = `${intro}${orderDetails}${deliveryLine}${total}`;
+        const message = `${intro}${orderDetails}${addons}${deliveryLine}${discountLine}${total}`;
+
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
         window.open(whatsappUrl, "_blank");
@@ -41,7 +57,16 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     const expectsDelivery = items.some(item => item.product.isScalable);
     const deliveryFee = expectsDelivery ? 50 : 0;
     const subtotal = getCartTotal();
-    const grandTotal = subtotal + deliveryFee;
+
+    // Discount Logic
+    let discount = 0;
+    if (subtotal >= 2000) discount = 100;
+    else if (subtotal >= 1000) discount = 50;
+
+    // Free Item Logic
+    const hasFreeChiaSeeds = items.some(item => item.product.id === "grand-7-item-box-100g");
+
+    const grandTotal = subtotal + deliveryFee - discount;
 
     return (
         <>
@@ -131,6 +156,12 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                 {items.length > 0 && (
                     <div className="border-t border-brand-gold/10 p-4 bg-gray-50 dark:bg-black/20">
                         <div className="flex flex-col gap-1 mb-4">
+                            {hasFreeChiaSeeds && (
+                                <div className="flex items-center justify-between text-sm py-1">
+                                    <span className="text-brand-gold font-bold flex items-center gap-1">🎁 Free Item</span>
+                                    <span className="font-medium text-brand-green dark:text-gray-300 text-right">Chia Seeds (50g)</span>
+                                </div>
+                            )}
                             <div className="flex items-center justify-between text-sm">
                                 <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
                                 <span className="font-medium text-brand-green dark:text-gray-300">₹{subtotal}</span>
@@ -139,6 +170,12 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-gray-600 dark:text-gray-400">Single Item Delivery</span>
                                     <span className="font-medium text-brand-green dark:text-gray-300">₹{deliveryFee}</span>
+                                </div>
+                            )}
+                            {discount > 0 && (
+                                <div className="flex items-center justify-between text-sm text-green-600 dark:text-green-400 font-medium">
+                                    <span>Discount Applied</span>
+                                    <span>- ₹{discount}</span>
                                 </div>
                             )}
                             <div className="flex items-center justify-between mt-2 pt-2 border-t border-brand-gold/10">

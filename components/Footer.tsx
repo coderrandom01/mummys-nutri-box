@@ -23,7 +23,7 @@ export default function Footer() {
                             Premium quality dry fruits, nuts, and healthy combinations carefully curated for you and your family's health and wellness.
                         </p>
                         <div className="flex space-x-4">
-                            <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-brand-gold/20 hover:text-brand-gold text-gray-400 transition-colors">
+                            <a href="https://www.instagram.com/mummysnutribasket?igsh=OGhoZXU3eDcxMG1k&utm_source=qr" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/5 rounded-full hover:bg-brand-gold/20 hover:text-brand-gold text-gray-400 transition-colors">
                                 <Instagram className="w-5 h-5" />
                             </a>
                             <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-brand-gold/20 hover:text-brand-gold text-gray-400 transition-colors">

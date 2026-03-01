@@ -13,6 +13,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { calculateScalablePrice } from "@/lib/pricing";
+import { toast } from "react-hot-toast";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -247,7 +248,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                 {/* Actions */}
                                 <div className="flex flex-col sm:flex-row gap-4 mt-auto">
                                     <button
-                                        onClick={() => addToCart(product, isScalable ? selectedWeight : undefined, isScalable ? currentPrice : undefined)}
+                                        onClick={() => {
+                                            addToCart(product, isScalable ? selectedWeight : undefined, isScalable ? currentPrice : undefined);
+                                            toast.success(`${product.name} added to cart!`);
+                                        }}
                                         className="flex-1 py-4 px-6 bg-brand-green hover:bg-brand-green-light dark:bg-white dark:hover:bg-gray-200 text-white dark:text-brand-green-dark rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-brand-green/20 dark:shadow-white/10 hover:-translate-y-1"
                                     >
                                         <ShoppingCart className="w-5 h-5" />
