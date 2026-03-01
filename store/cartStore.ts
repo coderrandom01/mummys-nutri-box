@@ -9,18 +9,23 @@ export interface Product {
     shortBenefit: string;
     includedItems: string[];
     healthBenefits: string[];
+    isScalable?: boolean;
+    baseCostPer100g?: number;
 }
 
 export interface CartItem {
+    id: string; // Format: productId or productId-weight
     product: Product;
     quantity: number;
+    selectedWeight?: number; // Weight in grams
+    calculatedPrice?: number; // Final calculated price for this specific cart item unit
 }
 
 interface CartStore {
     items: CartItem[];
-    addToCart: (product: Product) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
+    addToCart: (product: Product, selectedWeight?: number, calculatedPrice?: number) => void;
+    removeFromCart: (cartItemId: string) => void;
+    updateQuantity: (cartItemId: string, quantity: number) => void;
     getCartTotal: () => number;
     getCartItemsCount: () => number;
 }
@@ -28,33 +33,45 @@ interface CartStore {
 export const useCartStore = create<CartStore>((set, get) => ({
     items: [],
 
-    addToCart: (product) => set((state) => {
-        const existingItem = state.items.find(item => item.product.id === product.id);
+    addToCart: (product, selectedWeight, calculatedPrice) => set((state) => {
+        const cartItemId = product.isScalable && selectedWeight
+            ? `${product.id}-${selectedWeight}g`
+            : product.id;
+
+        const existingItem = state.items.find(item => item.id === cartItemId);
         if (existingItem) {
             return {
                 items: state.items.map(item =>
-                    item.product.id === product.id
+                    item.id === cartItemId
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 )
             };
         }
-        return { items: [...state.items, { product, quantity: 1 }] };
+        return {
+            items: [...state.items, {
+                id: cartItemId,
+                product,
+                quantity: 1,
+                selectedWeight,
+                calculatedPrice: calculatedPrice ?? product.price
+            }]
+        };
     }),
 
-    removeFromCart: (productId) => set((state) => ({
-        items: state.items.filter(item => item.product.id !== productId)
+    removeFromCart: (cartItemId) => set((state) => ({
+        items: state.items.filter(item => item.id !== cartItemId)
     })),
 
-    updateQuantity: (productId, quantity) => set((state) => {
+    updateQuantity: (cartItemId, quantity) => set((state) => {
         if (quantity <= 0) {
             return {
-                items: state.items.filter(item => item.product.id !== productId)
+                items: state.items.filter(item => item.id !== cartItemId)
             };
         }
         return {
             items: state.items.map(item =>
-                item.product.id === productId
+                item.id === cartItemId
                     ? { ...item, quantity }
                     : item
             )
@@ -63,7 +80,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
     getCartTotal: () => {
         const { items } = get();
-        return items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+        return items.reduce((total, item) => total + ((item.calculatedPrice ?? item.product.price) * item.quantity), 0);
     },
 
     getCartItemsCount: () => {

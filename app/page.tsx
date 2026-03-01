@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 import productsData from "@/data/products.json";
 import ProductCard from "@/components/ProductCard";
 import Header from "@/components/Header";
@@ -11,25 +12,19 @@ import BannerCarousel from "@/components/BannerCarousel";
 const BEST_SELLERS_IDS = ['classic-nut-box', 'premium-energy-box', 'grand-7-item-box-100g'];
 
 function HomeContent() {
-  const searchParams = useSearchParams();
-  const filterParam = searchParams.get('filter');
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const [filter, setFilter] = useState<'all' | 'best-sellers'>('all');
-
-  useEffect(() => {
-    if (filterParam === 'best-sellers') {
-      setFilter('best-sellers');
-      // Smooth scroll to products section
-      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (filterParam === 'all') {
-      setFilter('all');
-      document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    } else {
+      router.push('/search');
     }
-  }, [filterParam]);
+  };
 
-  const displayedProducts = filter === 'best-sellers'
-    ? productsData.filter(p => BEST_SELLERS_IDS.includes(p.id))
-    : productsData;
+  const displayedProducts = productsData.filter(p => BEST_SELLERS_IDS.includes(p.id));
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -50,24 +45,39 @@ function HomeContent() {
               <span>Healthy Choices,</span>
               <span className="text-brand-gold">Mummy's Care.</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto lg:mx-0 drop-shadow-md leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto lg:mx-0 drop-shadow-md leading-relaxed">
               Discover our carefully curated combinations of premium nuts, dates, and seeds for your family's daily wellness.
             </p>
-            <button
-              onClick={() => setFilter('all')}
-              className="inline-flex items-center justify-center px-8 py-4 text-brand-green-dark bg-brand-gold hover:bg-brand-gold-light rounded-xl font-bold transition-transform duration-300 hover:-translate-y-1 shadow-xl shadow-brand-gold/20 mr-4"
-            >
-              Explore Our Combos
-            </button>
-            <button
-              onClick={() => {
-                setFilter('best-sellers');
-                document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="inline-flex mt-4 sm:mt-0 items-center justify-center px-8 py-4 text-white border border-white/20 hover:bg-white/10 rounded-xl font-bold transition-all duration-300 hover:-translate-y-1 shadow-xl backdrop-blur-sm"
-            >
-              View Best Sellers
-            </button>
+
+            <form onSubmit={handleSearch} className="mb-8 relative max-w-lg mx-auto lg:mx-0">
+              <input
+                type="text"
+                placeholder="Search for nuts, seeds, combos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-5 pr-14 py-4 rounded-xl border-none font-medium text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-gold/50 shadow-lg"
+              />
+              <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-brand-green flex items-center justify-center rounded-lg text-brand-gold hover:bg-brand-green-light transition-colors">
+                <Search className="w-5 h-5" />
+              </button>
+            </form>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button
+                onClick={() => router.push('/search')}
+                className="inline-flex items-center justify-center px-8 py-4 text-brand-green-dark bg-brand-gold hover:bg-brand-gold-light rounded-xl font-bold transition-transform duration-300 hover:-translate-y-1 shadow-xl shadow-brand-gold/20"
+              >
+                Explore All Items
+              </button>
+              <button
+                onClick={() => {
+                  document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center justify-center px-8 py-4 text-white border border-white/20 hover:bg-white/10 rounded-xl font-bold transition-all duration-300 hover:-translate-y-1 shadow-xl backdrop-blur-sm"
+              >
+                View Best Sellers
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -79,32 +89,25 @@ function HomeContent() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {filter === 'best-sellers' ? 'Our Best Sellers' : 'Our Signature Combos'}
+                Our Best Sellers
               </h2>
               <p className="text-gray-500 dark:text-gray-400">Handpicked premium selections for your health needs</p>
             </div>
-
-            {/* Filter Toggle */}
-            <div className="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-6 py-2 rounded-lg font-semibold text-sm transition-all ${filter === 'all' ? 'bg-white dark:bg-brand-gold text-brand-green shadow-md dark:shadow-brand-gold/20' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
-              >
-                All Combos
-              </button>
-              <button
-                onClick={() => setFilter('best-sellers')}
-                className={`px-6 py-2 rounded-lg font-semibold text-sm transition-all ${filter === 'best-sellers' ? 'bg-white dark:bg-brand-gold text-brand-green shadow-md dark:shadow-brand-gold/20' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
-              >
-                Best Sellers
-              </button>
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
             {displayedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product as any} />
             ))}
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              onClick={() => router.push('/search')}
+              className="inline-flex items-center gap-2 px-8 py-4 border-2 border-brand-green dark:border-brand-gold text-brand-green dark:text-brand-gold hover:bg-brand-green hover:text-white dark:hover:bg-brand-gold dark:hover:text-brand-green-dark rounded-xl font-bold transition-all duration-300"
+            >
+              Search All Products
+            </button>
           </div>
 
         </div>

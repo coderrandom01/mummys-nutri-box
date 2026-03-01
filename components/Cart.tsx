@@ -15,22 +15,33 @@ export default function Cart({ isOpen, onClose }: CartProps) {
     const handleCheckout = () => {
         if (items.length === 0) return;
 
+        const expectsDelivery = items.some(item => item.product.isScalable);
+        const deliveryFee = expectsDelivery ? 50 : 0;
+        const subtotal = getCartTotal();
+        const grandTotal = subtotal + deliveryFee;
+
         const phoneNumber = "918883670422"; // User provided WhatsApp number
         const intro = "Hello! I would like to place an order from Mummy's Nutri Basket:%0A%0A";
 
         const orderDetails = items.map(item =>
-            `*${item.product.name}* (${item.product.weight})%0AQuantity: ${item.quantity}%0APrice: ₹${item.product.price * item.quantity}`
+            `*${item.product.name}* (${item.selectedWeight ? `${item.selectedWeight}g` : item.product.weight})%0AQuantity: ${item.quantity}%0APrice: ₹${(item.calculatedPrice ?? item.product.price) * item.quantity}`
         ).join("%0A%0A");
 
-        const total = `%0A%0A*Total Amount: ₹${getCartTotal()}*`;
+        const deliveryLine = expectsDelivery ? `%0A%0A+ Delivery Fee: ₹50` : "";
+        const total = `%0A%0A*Grand Total: ₹${grandTotal}*`;
 
-        const message = `${intro}${orderDetails}${total}`;
+        const message = `${intro}${orderDetails}${deliveryLine}${total}`;
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
         window.open(whatsappUrl, "_blank");
     };
 
     if (!isOpen) return null;
+
+    const expectsDelivery = items.some(item => item.product.isScalable);
+    const deliveryFee = expectsDelivery ? 50 : 0;
+    const subtotal = getCartTotal();
+    const grandTotal = subtotal + deliveryFee;
 
     return (
         <>
@@ -82,27 +93,28 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                                     )}
                                 </div>
 
-                                {/* Details */}
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
                                         <h3 className="font-semibold text-brand-green dark:text-brand-gold text-sm">{item.product.name}</h3>
-                                        <p className="text-brand-green-light dark:text-gray-400 text-xs">{item.product.weight}</p>
+                                        <p className="text-brand-green-light dark:text-gray-400 text-xs">
+                                            {item.selectedWeight ? `${item.selectedWeight}g` : item.product.weight}
+                                        </p>
                                     </div>
 
                                     <div className="flex items-center justify-between mt-2">
-                                        <p className="font-bold text-brand-green dark:text-white">₹{item.product.price}</p>
+                                        <p className="font-bold text-brand-green dark:text-white">₹{item.calculatedPrice ?? item.product.price}</p>
 
                                         {/* Quantity Controls */}
                                         <div className="flex items-center gap-2 bg-white dark:bg-brand-green-dark rounded-lg border border-brand-gold/20 p-1">
                                             <button
-                                                onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                                 className="p-1 hover:text-brand-gold transition-colors text-brand-green dark:text-gray-300"
                                             >
                                                 <Minus className="w-3 h-3" />
                                             </button>
                                             <span className="text-sm font-semibold w-4 text-center text-brand-green dark:text-white">{item.quantity}</span>
                                             <button
-                                                onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                                 className="p-1 hover:text-brand-gold transition-colors text-brand-green dark:text-gray-300"
                                             >
                                                 <Plus className="w-3 h-3" />
@@ -118,9 +130,21 @@ export default function Cart({ isOpen, onClose }: CartProps) {
                 {/* Footer / Checkout */}
                 {items.length > 0 && (
                     <div className="border-t border-brand-gold/10 p-4 bg-gray-50 dark:bg-black/20">
-                        <div className="flex items-center justify-between mb-4">
-                            <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
-                            <span className="text-xl font-bold text-brand-green dark:text-brand-gold">₹{getCartTotal()}</span>
+                        <div className="flex flex-col gap-1 mb-4">
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                                <span className="font-medium text-brand-green dark:text-gray-300">₹{subtotal}</span>
+                            </div>
+                            {expectsDelivery && (
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-600 dark:text-gray-400">Single Item Delivery</span>
+                                    <span className="font-medium text-brand-green dark:text-gray-300">₹{deliveryFee}</span>
+                                </div>
+                            )}
+                            <div className="flex items-center justify-between mt-2 pt-2 border-t border-brand-gold/10">
+                                <span className="text-gray-800 dark:text-gray-200 font-bold">Grand Total</span>
+                                <span className="text-xl font-black text-brand-green dark:text-brand-gold">₹{grandTotal}</span>
+                            </div>
                         </div>
                         <button
                             onClick={handleCheckout}

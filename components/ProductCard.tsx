@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Product } from "@/store/cartStore";
 import { useCartStore } from "@/store/cartStore";
+import { calculateScalablePrice } from "@/lib/pricing";
 
 interface ProductCardProps {
     product: Product;
@@ -16,6 +17,20 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     const addToCart = useCartStore((state) => state.addToCart);
+    const [selectedWeight, setSelectedWeight] = useState(100);
+
+    const isScalable = product.isScalable;
+    const currentPrice = isScalable && product.baseCostPer100g
+        ? calculateScalablePrice(product.baseCostPer100g, selectedWeight)
+        : product.price;
+
+    const handleIncreaseWeight = () => {
+        if (selectedWeight < 2000) setSelectedWeight(prev => prev + 50);
+    };
+
+    const handleDecreaseWeight = () => {
+        if (selectedWeight > 50) setSelectedWeight(prev => prev - 50);
+    };
 
     // Custom arrow components for Slick
     const CustomPrevArrow = (props: any) => {
@@ -121,9 +136,29 @@ export default function ProductCard({ product }: ProductCardProps) {
                         <ShieldCheck className="w-3 h-3" />
                         Premium
                     </span>
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 px-2.5 py-1 rounded-full">
-                        {product.weight}
-                    </span>
+                    {!isScalable ? (
+                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 px-2.5 py-1 rounded-full">
+                            {product.weight}
+                        </span>
+                    ) : (
+                        <div className="flex items-center gap-2 text-xs font-semibold text-brand-green dark:text-brand-gold border border-brand-green/20 dark:border-brand-gold/20 rounded-full px-2 py-0.5 bg-brand-green/5 dark:bg-brand-gold/5">
+                            <button
+                                onClick={handleDecreaseWeight}
+                                disabled={selectedWeight <= 50}
+                                className="p-1 hover:bg-brand-green/10 dark:hover:bg-brand-gold/10 rounded-full transition-colors leading-none disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                                -
+                            </button>
+                            <span className="w-9 text-center tabular-nums">{selectedWeight}g</span>
+                            <button
+                                onClick={handleIncreaseWeight}
+                                disabled={selectedWeight >= 2000}
+                                className="p-1 hover:bg-brand-green/10 dark:hover:bg-brand-gold/10 rounded-full transition-colors leading-none disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                                +
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Title & Price */}
@@ -140,14 +175,14 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <div className="flex items-end justify-between mb-4 pb-4 border-b border-gray-100 dark:border-gray-800">
                     <div>
                         <span className="text-xs text-brand-green dark:text-gray-400 font-medium tracking-wide pb-1 block">Price</span>
-                        <span className="text-2xl font-black text-brand-green dark:text-brand-gold">₹{product.price}</span>
+                        <span className="text-2xl font-black text-brand-green dark:text-brand-gold">₹{currentPrice}</span>
                     </div>
                 </div>
 
                 {/* Actions */}
                 <div className="flex items-center gap-3">
                     <button
-                        onClick={() => addToCart(product)}
+                        onClick={() => addToCart(product, isScalable ? selectedWeight : undefined, isScalable ? currentPrice : undefined)}
                         className="flex-1 bg-brand-green hover:bg-brand-green-light dark:bg-brand-gold dark:hover:bg-brand-gold-light text-white dark:text-brand-green-dark py-3 px-4 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm shadow-md shadow-brand-green/20 dark:shadow-brand-gold/10"
                     >
                         <ShoppingCart className="w-4 h-4" />

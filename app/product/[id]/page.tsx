@@ -12,11 +12,13 @@ import { notFound } from "next/navigation";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { calculateScalablePrice } from "@/lib/pricing";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
 
     const [product, setProduct] = useState<Product | null>(null);
+    const [selectedWeight, setSelectedWeight] = useState(100);
     const addToCart = useCartStore((state) => state.addToCart);
 
     // Custom Arrow Components for Slick on PDP
@@ -76,9 +78,23 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
     if (!product) return null;
 
+    const isScalable = product.isScalable;
+    const currentPrice = isScalable && product.baseCostPer100g
+        ? calculateScalablePrice(product.baseCostPer100g, selectedWeight)
+        : product.price;
+
+    const handleIncreaseWeight = () => {
+        if (selectedWeight < 2000) setSelectedWeight(prev => prev + 50);
+    };
+
+    const handleDecreaseWeight = () => {
+        if (selectedWeight > 50) setSelectedWeight(prev => prev - 50);
+    };
+
     const handleBuyNow = () => {
         const phoneNumber = "918883670422"; // User provided WhatsApp number
-        const message = `Hello! I would like to buy *${product.name}* (${product.weight}) for ₹${product.price}.%0A%0APlease let me know how to proceed.`;
+        const weightToUse = isScalable ? `${selectedWeight}g` : product.weight;
+        const message = `Hello! I would like to buy *${product.name}* (${weightToUse}) for ₹${currentPrice}.%0A%0APlease let me know how to proceed.`;
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
         window.open(whatsappUrl, "_blank");
     };
@@ -99,7 +115,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
 
                             {/* Image Section */}
-                            <div className="relative aspect-square lg:aspect-auto lg:h-full bg-brand-green/5 dark:bg-black/20 p-8 md:p-16 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-brand-gold/10 overflow-hidden">
+                            <div className="relative aspect-square lg:aspect-auto lg:h-full bg-brand-green/5 dark:bg-black/20 p-2 md:p-16 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-brand-gold/10 overflow-hidden">
                                 {product.images && product.images.length > 0 ? (
                                     <>
                                         <div className="relative w-full max-w-xl aspect-[4/3] lg:aspect-square z-20 drop-shadow-2xl group/pdp">
@@ -154,9 +170,29 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                     <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
                                         Premium Quality
                                     </span>
-                                    <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-full">
-                                        {product.weight}
-                                    </span>
+                                    {!isScalable ? (
+                                        <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700 px-3 py-1 rounded-full">
+                                            {product.weight}
+                                        </span>
+                                    ) : (
+                                        <div className="flex items-center gap-3 text-sm font-semibold text-brand-green dark:text-brand-gold border border-brand-green/20 dark:border-brand-gold/20 rounded-full px-3 py-1 bg-brand-green/5 dark:bg-brand-gold/5">
+                                            <button
+                                                onClick={handleDecreaseWeight}
+                                                disabled={selectedWeight <= 50}
+                                                className="w-6 h-6 flex items-center justify-center hover:bg-brand-green/10 dark:hover:bg-brand-gold/10 rounded-full transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="w-12 text-center tabular-nums">{selectedWeight}g</span>
+                                            <button
+                                                onClick={handleIncreaseWeight}
+                                                disabled={selectedWeight >= 2000}
+                                                className="w-6 h-6 flex items-center justify-center hover:bg-brand-green/10 dark:hover:bg-brand-gold/10 rounded-full transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-2 leading-tight">
@@ -168,7 +204,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                                 <div className="mb-10">
                                     <span className="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider block mb-1">Price</span>
-                                    <span className="text-5xl font-black text-brand-green dark:text-brand-gold">₹{product.price}</span>
+                                    <span className="text-5xl font-black text-brand-green dark:text-brand-gold">₹{currentPrice}</span>
                                 </div>
 
                                 {/* Features Grid */}
@@ -211,7 +247,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                 {/* Actions */}
                                 <div className="flex flex-col sm:flex-row gap-4 mt-auto">
                                     <button
-                                        onClick={() => addToCart(product)}
+                                        onClick={() => addToCart(product, isScalable ? selectedWeight : undefined, isScalable ? currentPrice : undefined)}
                                         className="flex-1 py-4 px-6 bg-brand-green hover:bg-brand-green-light dark:bg-white dark:hover:bg-gray-200 text-white dark:text-brand-green-dark rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-xl shadow-brand-green/20 dark:shadow-white/10 hover:-translate-y-1"
                                     >
                                         <ShoppingCart className="w-5 h-5" />
